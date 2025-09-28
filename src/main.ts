@@ -10,7 +10,7 @@ class InputLagChecker {
   private isMeasuring: boolean = false;
   private colorChangeTime: number = 0;
   private minDelay: number = 1000; // 1 second minimum
-  private maxDelay: number = 5000; // 5 seconds maximum
+  private maxDelay: number = 2000; // 5 seconds maximum
 
   constructor() {
     this.app = document.getElementById('app')!;
