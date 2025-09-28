@@ -51,6 +51,7 @@ class InputLagChecker {
 
     this.isMeasuring = true;
     this.hideResult();
+    this.hideStartButton();
     this.updateInstruction(
       'Get ready... The background will change color soon!'
     );
@@ -126,6 +127,20 @@ class InputLagChecker {
     resultElement.classList.add('hidden');
   }
 
+  private hideStartButton(): void {
+    const startButton = document.getElementById('startButton');
+    if (startButton) {
+      startButton.style.display = 'none';
+    }
+  }
+
+  private showStartButton(): void {
+    const startButton = document.getElementById('startButton');
+    if (startButton) {
+      startButton.style.display = 'block';
+    }
+  }
+
   private updateInstruction(text: string): void {
     const instructionElement = document.getElementById('instruction')!;
     instructionElement.innerHTML = `<p>${text}</p>`;
@@ -135,6 +150,7 @@ class InputLagChecker {
     this.isMeasuring = false;
     this.colorChangeTime = 0;
     document.body.style.backgroundColor = '';
+    this.showStartButton();
     this.updateInstruction(
       'Click the button below to start measuring your input lag'
     );
