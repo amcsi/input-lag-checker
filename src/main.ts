@@ -10,7 +10,8 @@ class InputLagChecker {
   private isMeasuring: boolean = false;
   private colorChangeTime: number = 0;
   private minDelay: number = 1000; // 1 second minimum
-  private maxDelay: number = 2000; // 5 seconds maximum
+  private maxDelay: number = 2000; // 2 seconds maximum
+  private gamepadPolling: boolean = false;
 
   constructor() {
     this.app = document.getElementById('app')!;
@@ -28,7 +29,7 @@ class InputLagChecker {
         <h1>Input Lag Checker</h1>
         <div class="instruction" id="instruction">
           <p>Click the button below to start measuring your input lag</p>
-          <p>When the background changes color, click or press any key as quickly as possible</p>
+          <p>When the background changes color, click, press any key, or press any gamepad button as quickly as possible</p>
         </div>
         <button id="startButton" class="start-button">Start Test</button>
         <div id="result" class="result hidden"></div>
@@ -43,7 +44,51 @@ class InputLagChecker {
     // Global event listeners for any input
     document.addEventListener('keydown', (e) => this.handleInput(e));
     document.addEventListener('click', (e) => this.handleInput(e));
-    document.addEventListener('gamepadbuttondown', (e) => this.handleInput(e));
+
+    // Gamepad support
+    this.setupGamepadSupport();
+  }
+
+  private setupGamepadSupport(): void {
+    // Listen for gamepad connections
+    window.addEventListener('gamepadconnected', (e) => {
+      console.log('Gamepad connected:', e.gamepad.id);
+    });
+
+    window.addEventListener('gamepaddisconnected', (e) => {
+      console.log('Gamepad disconnected:', e.gamepad.id);
+    });
+  }
+
+  private startGamepadPolling(): void {
+    if (this.gamepadPolling) return;
+    this.gamepadPolling = true;
+    this.pollGamepads();
+  }
+
+  private stopGamepadPolling(): void {
+    this.gamepadPolling = false;
+  }
+
+  private pollGamepads(): void {
+    if (!this.gamepadPolling || !this.isMeasuring || !this.colorChangeTime) {
+      return;
+    }
+
+    const gamepads = navigator.getGamepads();
+    for (const gamepad of gamepads) {
+      if (gamepad) {
+        // Check all buttons (0-15 are standard buttons)
+        for (let i = 0; i < gamepad.buttons.length; i++) {
+          if (gamepad.buttons[i].pressed) {
+            this.handleInput(new Event('gamepadbutton'));
+            return; // Exit immediately after first button press
+          }
+        }
+      }
+    }
+
+    requestAnimationFrame(() => this.pollGamepads());
   }
 
   private startMeasurement(): void {
@@ -63,6 +108,7 @@ class InputLagChecker {
     setTimeout(() => {
       this.changeBackgroundColor();
       this.colorChangeTime = performance.now();
+      this.startGamepadPolling();
       this.updateInstruction('NOW! Click or press any key!');
     }, delay);
   }
@@ -149,6 +195,7 @@ class InputLagChecker {
   private resetState(): void {
     this.isMeasuring = false;
     this.colorChangeTime = 0;
+    this.stopGamepadPolling();
     document.body.style.backgroundColor = '';
     this.showStartButton();
     this.updateInstruction(

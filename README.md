@@ -6,16 +6,17 @@ A simple web application to measure input lag for monitors and input devices (mo
 
 - Measures input lag in milliseconds and frames (assuming 60 FPS)
 - Supports mouse clicks, keyboard presses, and gamepad button presses
-- Randomized timing to prevent anticipation
+- Proper Gamepad API integration with efficient polling
+- Randomized timing to prevent anticipation (1-2 second delay)
 - Clean, responsive interface
 - Ready for Netlify deployment
 
 ## How it Works
 
 1. Click "Start Test" to begin
-2. Wait for the background color to change (randomized 1-5 second delay)
-3. Click or press any key as quickly as possible when the color changes
-4. View your input lag results in milliseconds and frames
+2. Wait for the background color to change (randomized 1-2 second delay)
+3. Click, press any key, or press any gamepad button as quickly as possible when the color changes
+4. View your input lag results in milliseconds and frames (with 2 decimal precision)
 
 ## Development
 
