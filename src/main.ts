@@ -93,7 +93,7 @@ class InputLagChecker {
   private showResult(lagMs: number): void {
     const result: InputLagResult = {
       milliseconds: Math.round(lagMs),
-      frames: Math.round(lagMs / 16.67), // Assuming 60 FPS (1000ms / 60fps = 16.67ms per frame)
+      frames: Number((lagMs / 16.67).toFixed(2)), // Assuming 60 FPS (1000ms / 60fps = 16.67ms per frame)
     };
 
     const resultElement = document.getElementById('result')!;
