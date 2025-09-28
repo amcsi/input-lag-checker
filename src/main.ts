@@ -29,7 +29,7 @@ class InputLagChecker {
         <h1>Input Lag Checker</h1>
         <div class="instruction" id="instruction">
           <p>Click the button below to start measuring your input lag</p>
-          <p>When the background changes color, click, press any key, or press any gamepad button as quickly as possible</p>
+          <p><small>Supports mouse, keyboard, and gamepad inputs</small></p>
         </div>
         <button id="startButton" class="start-button">Start Test</button>
         <div id="result" class="result hidden"></div>
@@ -199,7 +199,7 @@ class InputLagChecker {
     document.body.style.backgroundColor = '';
     this.showStartButton();
     this.updateInstruction(
-      'Click the button below to start measuring your input lag'
+      'Click the button below to start measuring your input lag<br><small>Supports mouse, keyboard, and gamepad inputs</small>'
     );
   }
 }
